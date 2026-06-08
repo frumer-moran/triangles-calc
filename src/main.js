@@ -12,6 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initPWAInstall();
   handleUnitChange();
   renderInitialMath();
+  initNumpadNextHandler();
 });
 
 // Render all static LaTeX math in the document body on boot
@@ -991,3 +992,34 @@ window.addEventListener('scroll', () => {
     btn.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
   }
 });
+
+// Focus the submit button directly if 2 valid inputs are filled and Next/Enter is clicked on keyboard
+function initNumpadNextHandler() {
+  INPUT_IDS.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          const val = parseFloat(input.value);
+          if (!isNaN(val) && val > 0) {
+            // Count active inputs
+            const activeCount = INPUT_IDS.reduce((count, inputId) => {
+              const inp = document.getElementById(inputId);
+              const v = parseFloat(inp.value);
+              return count + (!isNaN(v) && v > 0 ? 1 : 0);
+            }, 0);
+
+            // If we have exactly 2 valid values
+            if (activeCount === 2) {
+              const btn = document.getElementById('btn-calculate');
+              if (btn && !btn.disabled) {
+                e.preventDefault();
+                btn.focus();
+              }
+            }
+          }
+        }
+      });
+    }
+  });
+}

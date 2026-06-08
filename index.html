@@ -108,9 +108,14 @@
 
     <!-- 1. Input Form Card -->
     <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl text-right">
-      <div class="flex items-center gap-2 mb-3">
-        <i class="fa-solid fa-sliders text-indigo-400 text-base"></i>
-        <h2 class="text-base font-semibold text-slate-200">הזנת נתוני המשולש</h2>
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-indigo-400 text-base"></i>
+          <h2 class="text-base font-semibold text-slate-200">הזנת נתוני המשולש</h2>
+        </div>
+        <button onclick="resetAll()" class="px-2.5 py-1 text-xs text-slate-400 hover:text-white hover:bg-slate-800/80 border border-slate-800 rounded-lg transition-all flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> איפוס הכל
+        </button>
       </div>
 
       <p class="text-xs text-indigo-300 mb-4">
@@ -232,11 +237,6 @@
             <option value="יח׳">ללא</option>
           </select>
         </div>
-
-        <button onclick="resetAll()"
-          class="px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-all flex items-center gap-1">
-          <i class="fa-solid fa-rotate-left"></i> איפוס הכל
-        </button>
       </div>
 
       <!-- Validation Error Message -->
