@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>מחשבון משולש ישר זווית אינטראקטיבי</title>
+
+  <!-- PWA Metadata -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="משולש ישר זווית">
+  <link rel="apple-touch-icon" href="/icon.png">
+  <link rel="icon" type="image/png" href="/icon.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts for Hebrew (Rubik) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- KaTeX for beautiful math notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body class="text-slate-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-30 transition-all">
+    <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <svg class="w-6 h-6 text-white transform -rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <polygon points="5,19 19,19 5,5" />
+          </svg>
+        </div>
+        <div>
+          <h1
+            class="text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent text-right">
+            מחשבון משולש ישר זווית
+          </h1>
+          <p class="text-[11px] text-slate-400 text-right">פתרון מלא וייצוג פרופורציונלי דינמי לנייד</p>
+        </div>
+      </div>
+
+      <!-- PWA Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button id="btn-pwa-install"
+          class="hidden px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold rounded-lg shadow-lg flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-cloud-arrow-down"></i> הוסף למסך הבית
+        </button>
+        <button id="btn-ios-pwa-install"
+          class="hidden px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white text-xs font-bold rounded-lg shadow-lg flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-cloud-arrow-down"></i> הוסף למסך הבית
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- iOS Install Instruction Overlay -->
+  <div id="ios-install-overlay"
+    class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div
+      class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl relative text-right"
+      dir="rtl">
+      <button id="btn-close-overlay" class="absolute top-4 left-4 text-slate-400 hover:text-white transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div class="text-center pb-2">
+        <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center mx-auto mb-2 shadow-lg">
+          <i class="fa-solid fa-mobile-screen-button text-2xl text-white"></i>
+        </div>
+        <h3 class="text-base font-bold text-slate-100">התקנה ב-iPhone / iPad</h3>
+      </div>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        כדי להוסיף את מחשבון המשולשים למסך הבית שלך באייפון, בצע את השלבים הבאים:
+      </p>
+      <ol class="text-xs text-slate-400 space-y-3 list-decimal list-inside pr-1">
+        <li>לחץ על כפתור <strong>השיתוף</strong> בדפדפן ספארי (הסמל <i
+            class="fa-solid fa-square-share-nodes text-indigo-400"></i> בתחתית המסך).</li>
+        <li>גלול מטה בתפריט שנפתח ובחר באפשרות <strong>״הוסף למסך הבית״</strong> (Add to Home Screen).</li>
+        <li>לחץ על <strong>״הוסף״</strong> (Add) בפינה הימנית העליונה לאישור.</li>
+      </ol>
+      <button onclick="document.getElementById('ios-install-overlay').classList.add('hidden')"
+        class="w-full mt-2 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition-colors">
+        הבנתי, תודה!
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+    <!-- 1. Input Form Card -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl text-right">
+      <div class="flex items-center gap-2 mb-3">
+        <i class="fa-solid fa-sliders text-indigo-400 text-base"></i>
+        <h2 class="text-base font-semibold text-slate-200">הזנת נתוני המשולש</h2>
+      </div>
+
+      <p class="text-xs text-indigo-300 mb-4">
+        הזן <strong>לפחות שני נתונים</strong> (חייבת להיות לפחות צלע אחת). לאחר מכן לחץ על "פתור משולש".
+      </p>
+
+      <!-- Input Fields List -->
+      <div class="space-y-3 mb-5">
+        <!-- Side a -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label for="input-a" class="text-xs font-medium text-slate-300">ניצב אנכי (<span
+                class="text-blue-400 font-bold">a</span>)</label>
+            <span id="badge-a" class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 hidden"></span>
+          </div>
+          <div class="relative rounded-md shadow-sm">
+            <input type="number" step="any" min="0.001" id="input-a" oninput="handleInputChange()"
+              class="w-full bg-slate-800 border border-slate-700 text-slate-100 rounded-lg pl-12 pr-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+              placeholder="הזן אורך">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono current-unit">
+              ס״מ</div>
+          </div>
+        </div>
+
+        <!-- Side b -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label for="input-b" class="text-xs font-medium text-slate-300">ניצב אופקי (<span
+                class="text-purple-400 font-bold">b</span>)</label>
+            <span id="badge-b" class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 hidden"></span>
+          </div>
+          <div class="relative rounded-md shadow-sm">
+            <input type="number" step="any" min="0.001" id="input-b" oninput="handleInputChange()"
+              class="w-full bg-slate-800 border border-slate-700 text-slate-100 rounded-lg pl-12 pr-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+              placeholder="הזן אורך">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono current-unit">
+              ס״מ</div>
+          </div>
+        </div>
+
+        <!-- Side c (Hypotenuse) -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label for="input-c" class="text-xs font-medium text-slate-300">יתר המשולש (<span
+                class="text-rose-400 font-bold">c</span>)</label>
+            <span id="badge-c" class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 hidden"></span>
+          </div>
+          <div class="relative rounded-md shadow-sm">
+            <input type="number" step="any" min="0.001" id="input-c" oninput="handleInputChange()"
+              class="w-full bg-slate-800 border border-slate-700 text-slate-100 rounded-lg pl-12 pr-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+              placeholder="הזן אורך">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono current-unit">
+              ס״מ</div>
+          </div>
+        </div>
+
+        <!-- Angle Alpha -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label for="input-alpha" class="text-xs font-medium text-slate-300">זווית מול צלע a (<span
+                class="text-amber-400 font-bold">α</span>)</label>
+            <span id="badge-alpha" class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 hidden"></span>
+          </div>
+          <div class="relative rounded-md shadow-sm">
+            <input type="number" step="any" min="0.001" max="89.999" id="input-alpha" oninput="handleInputChange()"
+              class="w-full bg-slate-800 border border-slate-700 text-slate-100 rounded-lg pl-12 pr-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+              placeholder="הזן מעלות (0-90)">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono">
+              °</div>
+          </div>
+        </div>
+
+        <!-- Angle Beta -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label for="input-beta" class="text-xs font-medium text-slate-300">זווית מול צלע b (<span
+                class="text-blue-400 font-bold">β</span>)</label>
+            <span id="badge-beta" class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 hidden"></span>
+          </div>
+          <div class="relative rounded-md shadow-sm">
+            <input type="number" step="any" min="0.001" max="89.999" id="input-beta" oninput="handleInputChange()"
+              class="w-full bg-slate-800 border border-slate-700 text-slate-100 rounded-lg pl-12 pr-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+              placeholder="הזן מעלות (0-90)">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono">
+              °</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action & Calculate Button -->
+      <div class="mb-4">
+        <button id="btn-calculate" onclick="triggerCalculate()" disabled
+          class="w-full py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg cursor-not-allowed bg-slate-800 text-slate-500 border border-slate-700">
+          <i class="fa-solid fa-circle-play"></i> פתור משולש
+        </button>
+        <p id="helper-msg" class="text-[11px] text-slate-400 text-center mt-2">הזן לפחות שני נתונים (עם צלע אחת לפחות)
+          כדי לאפשר פתרון.</p>
+      </div>
+
+      <!-- Unit Selector & Action Bar -->
+      <div class="flex items-center justify-between gap-4 border-t border-slate-800 pt-4">
+        <div class="flex items-center gap-2">
+          <label for="unit-select" class="text-xs text-slate-400">יחידות:</label>
+          <select id="unit-select" onchange="handleUnitChange()"
+            class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded px-2 py-1 outline-none cursor-pointer focus:ring-1 focus:ring-indigo-500">
+            <option value="ס״מ">ס״מ</option>
+            <option value="מ׳">מ׳</option>
+            <option value="מ״מ">מ״מ</option>
+            <option value="יח׳">ללא</option>
+          </select>
+        </div>
+
+        <button onclick="resetAll()"
+          class="px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-all flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> איפוס הכל
+        </button>
+      </div>
+
+      <!-- Validation Error Message -->
+      <div id="error-box"
+        class="hidden mt-4 p-3 rounded-lg bg-red-950/40 border border-red-800 text-red-200 text-xs flex items-start gap-2 animate-soft-pulse">
+        <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+        <span id="error-text">נתונים לא תקינים</span>
+      </div>
+    </div>
+
+    <!-- 2. Dynamic Diagram -->
+    <div id="diagram-card"
+      class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 backdrop-blur-md shadow-xl text-right">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-shapes text-indigo-400 text-base"></i>
+          <h2 class="text-base font-semibold text-slate-200">תרשים פרופורציונלי דינמי</h2>
+        </div>
+        <div class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
+          קני מידה אוטומטי
+        </div>
+      </div>
+
+      <!-- SVG Visual Render Area -->
+      <div class="relative w-full aspect-[4/3] max-h-[350px]">
+        <svg id="triangle-svg" viewBox="0 0 500 400"
+          class="w-full h-full border border-slate-800/80 rounded-xl bg-slate-950/80 shadow-inner">
+          <defs>
+            <pattern id="blueprint-grid" width="25" height="25" patternUnits="userSpaceOnUse">
+              <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#1e293b" stroke-width="0.75" />
+            </pattern>
+            <linearGradient id="triangle-fill-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2" />
+              <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.05" />
+            </linearGradient>
+            <filter id="vector-shadow" x="-10%" y="-10%" width="120%" height="120%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.6" />
+            </filter>
+          </defs>
+
+          <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
+          <path id="right-angle-marker" d="" fill="none" stroke="#10b981" stroke-width="2"
+            class="transition-all duration-300" />
+          <path id="arc-alpha" d="" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 2"
+            class="transition-all duration-300" />
+          <path id="arc-beta" d="" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3 2"
+            class="transition-all duration-300" />
+          <polygon id="triangle-poly" points="70,70 70,330 430,330" fill="url(#triangle-fill-grad)" stroke="#6366f1"
+            stroke-width="3" filter="url(#vector-shadow)" stroke-linejoin="round" class="transition-all duration-500" />
+          <circle id="node-a" cx="70" cy="70" r="5" fill="#3b82f6" class="transition-all duration-500" />
+          <circle id="node-b" cx="430" cy="330" r="5" fill="#f59e0b" class="transition-all duration-500" />
+          <circle id="node-c" cx="70" cy="330" r="5" fill="#10b981" class="transition-all duration-500" />
+
+          <!-- Side Labels -->
+          <g font-size="13" font-weight="bold" fill="#f8fafc">
+            <text id="lbl-side-a" x="35" y="200" text-anchor="end" dominant-baseline="middle" fill="#60a5fa"
+              class="transition-all duration-500"></text>
+            <text id="lbl-side-b" x="250" y="365" text-anchor="middle" dominant-baseline="hanging" fill="#c084fc"
+              class="transition-all duration-500"></text>
+            <text id="lbl-side-c" x="260" y="190" text-anchor="middle" dominant-baseline="middle" fill="#f43f5e"
+              class="transition-all duration-500"></text>
+          </g>
+
+          <!-- Angle Labels -->
+          <g font-size="12" font-weight="medium" fill="#94a3b8">
+            <text id="lbl-ang-alpha" x="400" y="325" text-anchor="end" fill="#f59e0b"
+              class="transition-all duration-500"></text>
+            <text id="lbl-ang-beta" x="75" y="90" text-anchor="start" fill="#3b82f6"
+              class="transition-all duration-500"></text>
+            <text id="lbl-ang-gamma" x="75" y="325" text-anchor="start" fill="#10b981">90°</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 3. Calculated Values Display Card -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl text-right">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-square-poll-vertical text-emerald-400 text-base"></i>
+          <h2 class="text-base font-semibold text-slate-200">תוצאות החישוב</h2>
+        </div>
+        <button onclick="copyResults()" id="btn-copy"
+          class="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-copy"></i> העתק
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3" dir="rtl">
+        <!-- Side a -->
+        <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl flex flex-col justify-between">
+          <span class="text-[11px] text-slate-400">ניצב אנכי ($a$)</span>
+          <div class="flex items-baseline gap-1 mt-1">
+            <span class="text-base font-bold text-blue-400" id="res-a">-</span>
+            <span class="text-[10px] text-slate-500 font-normal current-unit">ס״מ</span>
+          </div>
+        </div>
+        <!-- Side b -->
+        <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl flex flex-col justify-between">
+          <span class="text-[11px] text-slate-400">ניצב אופקי ($b$)</span>
+          <div class="flex items-baseline gap-1 mt-1">
+            <span class="text-base font-bold text-purple-400" id="res-b">-</span>
+            <span class="text-[10px] text-slate-500 font-normal current-unit">ס״מ</span>
+          </div>
+        </div>
+        <!-- Side c -->
+        <div
+          class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl col-span-2 flex justify-between items-center">
+          <div>
+            <span class="text-[11px] text-slate-400 block">יתר ($c$)</span>
+            <span class="text-lg font-black text-rose-400 mt-1 block" id="res-c">-</span>
+          </div>
+          <span class="text-xs text-slate-500 font-mono current-unit">ס״מ</span>
+        </div>
+        <!-- Angle alpha -->
+        <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl flex flex-col justify-between">
+          <span class="text-[11px] text-slate-400">זווית מול $a$ ($\alpha$)</span>
+          <span class="text-base font-bold text-amber-400 mt-1" id="res-alpha">-</span>
+        </div>
+        <!-- Angle beta -->
+        <div class="p-3 bg-slate-950/50 border border-slate-800/80 rounded-xl flex flex-col justify-between">
+          <span class="text-[11px] text-slate-400">זווית מול $b$ ($\beta$)</span>
+          <span class="text-base font-bold text-blue-400 mt-1" id="res-beta">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Math Steps & Explanations Panel -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl text-right">
+      <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSteps()">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-graduation-cap text-indigo-400 text-base"></i>
+          <h2 class="text-base font-semibold text-slate-200">שלבי הפתרון וההסבר המלא</h2>
+        </div>
+        <i id="steps-toggle-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+      </div>
+
+      <div id="steps-container" class="space-y-4 pr-1">
+        <p class="text-xs text-slate-400">ממתין להזנת לפחות 2 ננתונים חיוביים (עם צלע אחת לפחות) ולחיצה על "פתור משולש".
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Educational Formula Cheatsheet Footer Grid -->
+  <section class="max-w-3xl mx-auto px-4 pb-8 w-full text-right">
+    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5">
+      <h3 class="text-xs font-semibold text-slate-300 mb-3 flex items-center gap-2">
+        <i class="fa-solid fa-book-open text-indigo-400"></i>
+        נוסחאות שימושיות למשולש ישר זווית
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-400">
+        <div class="p-2.5 bg-slate-950/40 border border-slate-800 rounded-lg">
+          <span class="font-bold text-slate-300 block mb-0.5">משפט פיתגורס:</span>
+          <code class="text-indigo-300">a² + b² = c²</code>
+        </div>
+        <div class="p-2.5 bg-slate-950/40 border border-slate-800 rounded-lg">
+          <span class="font-bold text-slate-300 block mb-0.5">פונקציית הסינוס (Sin):</span>
+          <code class="text-indigo-300">sin(α) = a / c</code>
+        </div>
+        <div class="p-2.5 bg-slate-950/40 border border-slate-800 rounded-lg">
+          <span class="font-bold text-slate-300 block mb-0.5">פונקציית הקוסינוס (Cos):</span>
+          <code class="text-indigo-300">cos(α) = b / c</code>
+        </div>
+        <div class="p-2.5 bg-slate-950/40 border border-slate-800 rounded-lg">
+          <span class="font-bold text-slate-300 block mb-0.5">פונקציית הטנגנס (Tan):</span>
+          <code class="text-indigo-300">tan(α) = a / b</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-[10px] text-slate-500">
+    <div class="max-w-3xl mx-auto px-4">
+      מחשבון משולש ישר זווית • פותח לצרכים לימודיים וטכניים • 2026
+    </div>
+  </footer>
+
+  <!-- Toast notification banner -->
+  <div id="toast"
+    class="fixed bottom-5 left-5 bg-indigo-600 text-white px-4 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none flex items-center gap-2">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-message">הועתק בהצלחה!</span>
+  </div>
+
+  <!-- Tailwind purging safety safelist wrapper -->
+  <div
+    class="hidden border-emerald-500 text-emerald-400 bg-slate-900/50 border-indigo-500 bg-indigo-950/50 text-indigo-300 bg-emerald-950/50 text-emerald-300 bg-gradient-to-r from-indigo-600 to-violet-500 hover:from-indigo-500 hover:to-violet-400 text-white shadow-indigo-500/30 cursor-pointer bg-slate-800 text-slate-500 cursor-not-allowed rotate-180">
+  </div>
+
+  <!-- Main Controller Logic Script -->
+  <script type="module" src="/src/main.js"></script>
+
+</body>
+
+</html>

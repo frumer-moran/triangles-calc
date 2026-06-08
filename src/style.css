@@ -1,0 +1,44 @@
+body {
+  font-family: 'Rubik', sans-serif;
+  background-color: #0f172a;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* RTL math equation horizontal scroll wrapping */
+.rtl-equations {
+  direction: ltr !important;
+  text-align: right;
+}
+
+/* Custom animation for warning pulses */
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Safe areas for mobile devices */
+@supports (padding: env(safe-area-inset-top)) {
+  header {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+}
