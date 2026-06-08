@@ -55,12 +55,17 @@ window.resetAll = function() {
     const input = document.getElementById(id);
     input.value = '';
     input.disabled = false;
-    input.classList.remove('border-emerald-500', 'text-emerald-400', 'bg-slate-900/50', 'border-indigo-500');
+    input.classList.remove('border-emerald-500', 'text-emerald-400', 'bg-slate-900/50', 'border-indigo-500', 'border-red-500');
     
     const badgeId = 'badge-' + id.replace('input-', '');
     const badge = document.getElementById(badgeId);
     badge.classList.add('hidden');
     badge.innerHTML = '';
+
+    const errorMsgDiv = document.getElementById('error-msg-' + id);
+    if (errorMsgDiv) {
+      errorMsgDiv.classList.add('hidden');
+    }
   });
   
   const btn = document.getElementById('btn-calculate');
@@ -151,6 +156,16 @@ window.handleInputChange = function() {
     drawTriangle(3, 4, 5, 36.87, 53.13, true);
   }
   
+  // Clear any existing input error markings
+  INPUT_IDS.forEach(id => {
+    const input = document.getElementById(id);
+    input.classList.remove('border-red-500', 'border-indigo-500');
+    const errorMsgDiv = document.getElementById('error-msg-' + id);
+    if (errorMsgDiv) {
+      errorMsgDiv.classList.add('hidden');
+    }
+  });
+
   const activeInputs = [];
   INPUT_IDS.forEach(id => {
     const input = document.getElementById(id);
@@ -165,20 +180,11 @@ window.handleInputChange = function() {
     valMap[item.key] = item.val;
   });
 
+  // Set default badges hiding
   INPUT_IDS.forEach(id => {
-    const input = document.getElementById(id);
     const badgeId = 'badge-' + id.replace('input-', '');
     const badge = document.getElementById(badgeId);
-    
-    const isUserEntered = activeInputs.some(item => item.id === id);
-    
-    if (isUserEntered) {
-      input.classList.add('border-indigo-500');
-      badge.classList.remove('hidden', 'bg-emerald-950/50', 'text-emerald-300');
-      badge.classList.add('bg-indigo-950/50', 'text-indigo-300');
-      badge.innerHTML = 'הוזן';
-    } else {
-      input.classList.remove('border-indigo-500');
+    if (badge) {
       badge.classList.add('hidden');
       badge.innerHTML = '';
     }
@@ -189,6 +195,19 @@ window.handleInputChange = function() {
   const helper = document.getElementById('helper-msg');
 
   if (activeInputs.length === 2) {
+    // Apply standard user entered indigo borders & badges
+    activeInputs.forEach(item => {
+      const input = document.getElementById(item.id);
+      input.classList.add('border-indigo-500');
+      const badgeId = 'badge-' + item.key;
+      const badge = document.getElementById(badgeId);
+      if (badge) {
+        badge.classList.remove('hidden', 'bg-emerald-950/50', 'text-emerald-300');
+        badge.classList.add('bg-indigo-950/50', 'text-indigo-300');
+        badge.innerHTML = 'הוזן';
+      }
+    });
+
     if (!hasSide) {
       btn.disabled = true;
       btn.classList.add('cursor-not-allowed', 'bg-slate-800', 'text-slate-500');
@@ -241,8 +260,31 @@ window.handleInputChange = function() {
     helper.textContent = "שגיאה: הזנת יותר מדי נתונים. יש להזין בדיוק שני נתונים.";
     helper.classList.add('text-red-400');
     showError("שגיאה: יש להזין בדיוק שני נתונים כדי לפתור את המשולש.");
+
+    // Highlight active inputs in red and show inline warning message right below them
+    activeInputs.forEach(item => {
+      const input = document.getElementById(item.id);
+      input.classList.add('border-red-500');
+      const errorMsgDiv = document.getElementById('error-msg-' + item.id);
+      if (errorMsgDiv) {
+        errorMsgDiv.classList.remove('hidden');
+      }
+    });
   } else {
     // length < 2
+    // Apply standard user entered indigo borders for any partially filled input
+    activeInputs.forEach(item => {
+      const input = document.getElementById(item.id);
+      input.classList.add('border-indigo-500');
+      const badgeId = 'badge-' + item.key;
+      const badge = document.getElementById(badgeId);
+      if (badge) {
+        badge.classList.remove('hidden', 'bg-emerald-950/50', 'text-emerald-300');
+        badge.classList.add('bg-indigo-950/50', 'text-indigo-300');
+        badge.innerHTML = 'הוזן';
+      }
+    });
+
     btn.disabled = true;
     btn.classList.add('cursor-not-allowed', 'bg-slate-800', 'text-slate-500');
     btn.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-violet-500', 'hover:from-indigo-500', 'hover:to-violet-400', 'text-white', 'shadow-indigo-500/30', 'cursor-pointer');
@@ -253,6 +295,11 @@ window.handleInputChange = function() {
 
 // Trigger calculation
 window.triggerCalculate = function() {
+  // Hide mobile keyboard by blurring focus
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    document.activeElement.blur();
+  }
+
   const active = [];
   INPUT_IDS.forEach(id => {
     const input = document.getElementById(id);
@@ -260,7 +307,7 @@ window.triggerCalculate = function() {
     if (!isNaN(val) && val > 0) active.push({ id, val });
   });
 
-  if (active.length >= 2) {
+  if (active.length === 2) {
     liveCalculate(active);
   }
 }
@@ -926,3 +973,21 @@ function initPWAInstall() {
     showToast("האפליקציה הותקנה בהצלחה!");
   });
 }
+
+// Scroll to the top of the page smoothly
+window.scrollToTop = function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Monitor scroll to show/hide the "Back to Top" sticky button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('btn-back-to-top');
+  if (!btn) return;
+  
+  // Show button if scrolled past 300px (i.e. past the input area)
+  if (window.scrollY > 300) {
+    btn.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+  } else {
+    btn.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+  }
+});

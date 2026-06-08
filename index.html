@@ -134,6 +134,7 @@
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono current-unit">
               ס״מ</div>
           </div>
+          <div id="error-msg-input-a" class="text-[10.5px] text-red-400 mt-1 hidden font-medium flex items-center gap-1"><i class="fa-solid fa-circle-info text-[9px]"></i> יותר מדי נתונים, מחק נתון זה או אחר</div>
         </div>
 
         <!-- Side b -->
@@ -151,6 +152,7 @@
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono current-unit">
               ס״מ</div>
           </div>
+          <div id="error-msg-input-b" class="text-[10.5px] text-red-400 mt-1 hidden font-medium flex items-center gap-1"><i class="fa-solid fa-circle-info text-[9px]"></i> יותר מדי נתונים, מחק נתון זה או אחר</div>
         </div>
 
         <!-- Side c (Hypotenuse) -->
@@ -168,6 +170,7 @@
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono current-unit">
               ס״מ</div>
           </div>
+          <div id="error-msg-input-c" class="text-[10.5px] text-red-400 mt-1 hidden font-medium flex items-center gap-1"><i class="fa-solid fa-circle-info text-[9px]"></i> יותר מדי נתונים, מחק נתון זה או אחר</div>
         </div>
 
         <!-- Angle Alpha -->
@@ -185,6 +188,7 @@
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono">
               °</div>
           </div>
+          <div id="error-msg-input-alpha" class="text-[10.5px] text-red-400 mt-1 hidden font-medium flex items-center gap-1"><i class="fa-solid fa-circle-info text-[9px]"></i> יותר מדי נתונים, מחק נתון זה או אחר</div>
         </div>
 
         <!-- Angle Beta -->
@@ -202,6 +206,7 @@
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono">
               °</div>
           </div>
+          <div id="error-msg-input-beta" class="text-[10.5px] text-red-400 mt-1 hidden font-medium flex items-center gap-1"><i class="fa-solid fa-circle-info text-[9px]"></i> יותר מדי נתונים, מחק נתון זה או אחר</div>
         </div>
       </div>
 
@@ -411,6 +416,13 @@
       מחשבון משולש ישר זווית • פותח לצרכים לימודיים וטכניים • 2026
     </div>
   </footer>
+
+  <!-- Back to top button -->
+  <button id="btn-back-to-top" onclick="scrollToTop()"
+    class="fixed bottom-5 right-5 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-full shadow-xl z-40 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none flex items-center gap-2 text-xs font-bold">
+    <i class="fa-solid fa-arrow-up"></i>
+    חזור למעלה
+  </button>
 
   <!-- Toast notification banner -->
   <div id="toast"
